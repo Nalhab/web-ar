@@ -16,14 +16,14 @@ import {
   PerspectiveCamera,
   Scene,
   WebGLRenderer
-} from '../master/three.js-master/build/three.module.js';
+} from 'three';
 
 // XR Emulator
-import { DevUI } from '../master/@iwer/devui-master/lib/index.js';
-import { XRDevice, metaQuest3 } from '../master/iwer-master/lib/index.js';
+import { DevUI } from '@iwer/devui';
+import { XRDevice, metaQuest3 } from 'iwer';
 
 // XR
-import { XRButton } from '../master/three.js-master/examples/jsm/webxr/XRButton.js';
+import { XRButton } from 'three/addons/webxr/XRButton.js';
 
 // If you prefer to import the whole library, with the THREE prefix, use the following line instead:
 // import * as THREE from 'three'
@@ -44,8 +44,13 @@ import { XRButton } from '../master/three.js-master/examples/jsm/webxr/XRButton.
 // See vite.config.js
 // 
 // Consider using alternatives like Oimo or cannon-es
-import { OrbitControls } from '../master/three.js-master/examples/jsm/controls/OrbitControls.js';
-import { GLTFLoader } from '../master/three.js-master/examples/jsm/loaders/GLTFLoader.js';
+import {
+  OrbitControls
+} from 'three/addons/controls/OrbitControls.js';
+
+import {
+  GLTFLoader
+} from 'three/addons/loaders/GLTFLoader.js';
 
 // Example of hard link to official repo for data, if needed
 // const MODEL_PATH = 'https://raw.githubusercontent.com/mrdoob/js/r148/examples/models/gltf/LeePerrySmith/LeePerrySmith.glb';
