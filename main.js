@@ -16,14 +16,14 @@ import {
   PerspectiveCamera,
   Scene,
   WebGLRenderer
-} from './node_modules/three/build/three.module.js';
+} from 'three';
 
 // XR Emulator
 import { DevUI } from '@iwer/devui';
 import { XRDevice, metaQuest3 } from 'iwer';
 
 // XR
-import { XRButton } from './node_modules/three/examples/jsm/webxr/XRButton.js';
+import { XRButton } from 'three/addons/webxr/XRButton.js';
 
 // If you prefer to import the whole library, with the THREE prefix, use the following line instead:
 // import * as THREE from 'three'
@@ -46,11 +46,11 @@ import { XRButton } from './node_modules/three/examples/jsm/webxr/XRButton.js';
 // Consider using alternatives like Oimo or cannon-es
 import {
   OrbitControls
-} from './node_modules/three/examples/jsm/controls/OrbitControls.js';
+} from 'three/addons/controls/OrbitControls.js';
 
 import {
   GLTFLoader
-} from './node_modules/three/examples/jsm/loaders/GLTFLoader.js';
+} from 'three/addons/loaders/GLTFLoader.js';
 
 // Example of hard link to official repo for data, if needed
 // const MODEL_PATH = 'https://raw.githubusercontent.com/mrdoob/js/r148/examples/models/gltf/LeePerrySmith/LeePerrySmith.glb';
