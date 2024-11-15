@@ -16,7 +16,7 @@ import {
   PerspectiveCamera,
   Scene,
   WebGLRenderer
-} from 'three';
+} from '../master/three.js-master/build/three.module.js';
 
 // XR Emulator
 import { DevUI } from '@iwer/devui';
