@@ -3,7 +3,7 @@ import { viteStaticCopy } from 'vite-plugin-static-copy';
 import glsl from 'vite-plugin-glsl';
 
 export default defineConfig({
-    base: "./",
+    base: "/three_vite_xr",
     clearScreen: false,
     optimizeDeps: {
         esbuildOptions: {
@@ -18,8 +18,6 @@ export default defineConfig({
         }
     },
     build: {
-        outDir: 'dist',
-        assetsDir: 'assets',
         sourcemap: true,
     },
     server: {
