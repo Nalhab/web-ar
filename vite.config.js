@@ -5,43 +5,49 @@ import react from '@vitejs/plugin-react';
 
 export default defineConfig({
     base: "/",
+    clearScreen: false,
+    optimizeDeps: {
+        esbuildOptions: {
+            supported: {
+                'top-level-await': true
+            }
+        },
+        include: ['react', 'react-dom']
+    },
+    esbuild: {
+        supported: {
+            'top-level-await': true
+        }
+    },
+    build: {
+        sourcemap: true,
+        rollupOptions: {
+            external: ['react', 'react-dom', 'react/jsx-runtime', 'react-dom/client'],
+            output: {
+                globals: {
+                    react: 'React',
+                    'react-dom': 'ReactDOM',
+                    'react/jsx-runtime': 'jsxRuntime',
+                    'react-dom/client': 'ReactDOMClient'
+                }
+            }
+        }
+    },
+    server: {
+        open: true
+    },
     plugins: [
         react(),
         viteStaticCopy({
             targets: [
                 { src: 'node_modules/three/examples/jsm/libs/ammo.wasm.js', dest: 'jsm/libs/' },
                 { src: 'node_modules/three/examples/jsm/libs/ammo.wasm.wasm', dest: 'jsm/libs/' },
-                { src: 'node_modules/three/examples/jsm/libs/draco/gltf/*', dest: 'jsm/libs/draco/gltf/' }
+                { src: 'node_modules/three/examples/jsm/libs/draco/gltf/draco_decoder.js', dest: 'jsm/libs/draco/gltf' },
+                { src: 'node_modules/three/examples/jsm/libs/draco/gltf/draco_decoder.wasm', dest: 'jsm/libs/draco/gltf/' },
+                { src: 'node_modules/three/examples/jsm/libs/draco/gltf/draco_encoder.js', dest: 'jsm/libs/draco/gltf/' },
+                { src: 'node_modules/three/examples/jsm/libs/draco/gltf/draco_wasm_wrapper.js', dest: 'jsm/libs/draco/gltf/' }
             ]
         }),
         glsl()
-    ],
-    server: {
-        open: true,
-        https: true
-    },
-    resolve: {
-        alias: {
-            'three': '/node_modules/three/build/three.module.js',
-            'three/examples/jsm/': '/node_modules/three/examples/jsm/'
-        }
-    },
-    optimizeDeps: {
-        include: [
-            'react', 
-            'react-dom',
-            'three',
-            'three/examples/jsm/webxr/XRButton.js',
-            'three/examples/jsm/controls/OrbitControls.js',
-            'three/examples/jsm/loaders/GLTFLoader.js',
-            'iwer',
-            '@iwer/devui'
-        ]
-    },
-    build: {
-        sourcemap: true,
-        commonjsOptions: {
-            include: [/node_modules/]
-        }
-    }
-});
+    ]
+})

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
@@ -7,18 +8,27 @@
   <script type="importmap">
     {
       "imports": {
-        "three": "/node_modules/three/build/three.module.js",
-        "three/examples/": "/node_modules/three/examples/",
-        "iwer": "/node_modules/iwer/lib/index.js",
-        "@iwer/devui": "/node_modules/@iwer/devui/lib/index.js"
+        "three": "https://unpkg.com/three@0.155.0/build/three.module.js",
+        "three/examples/jsm/": "https://unpkg.com/three@0.155.0/examples/jsm/",
+        "three/examples/jsm/webxr/XRButton.js": "https://unpkg.com/three@0.155.0/examples/jsm/webxr/XRButton.js",
+        "three/examples/jsm/loaders/GLTFLoader.js": "https://unpkg.com/three@0.155.0/examples/jsm/loaders/GLTFLoader.js",
+        "three/examples/jsm/controls/OrbitControls.js": "https://unpkg.com/three@0.155.0/examples/jsm/controls/OrbitControls.js",
+        "iwer": "https://cdn.jsdelivr.net/npm/iwer@1.0.4/lib/index.js",
+        "@iwer/devui": "https://cdn.jsdelivr.net/npm/@iwer/devui@0.2.1/lib/index.js",
+        "react": "https://esm.sh/react@18.3.1",
+        "react-dom": "https://esm.sh/react-dom@18.3.1",
+        "react/jsx-runtime": "https://esm.sh/react@18.3.1/jsx-runtime",
+        "react-dom/client": "https://esm.sh/react-dom@18.3.1/client"
       }
     }
   </script>
   <link rel="icon" href="./public/favicon.png">
   <link rel="stylesheet" href="./main.css">
 </head>
+
 <body>
   <div id="container"></div>
   <script type="module" src="./main.js"></script>
 </body>
+
 </html>
