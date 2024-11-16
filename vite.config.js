@@ -1,6 +1,7 @@
 import { defineConfig } from 'vite';
 import { viteStaticCopy } from 'vite-plugin-static-copy';
 import glsl from 'vite-plugin-glsl';
+import externalizeDeps from 'vite-plugin-externalize-deps';
 
 export default defineConfig({
     base: "/three_vite_xr",
@@ -21,7 +22,7 @@ export default defineConfig({
         sourcemap: true,
     },
     server: {
-        open: true
+        open: false
     },
     plugins: [
         viteStaticCopy({
@@ -34,6 +35,9 @@ export default defineConfig({
                 { src: 'node_modules/three/examples/jsm/libs/draco/gltf/draco_wasm_wrapper.js', dest: 'jsm/libs/draco/gltf/' }
             ]
         }),
-        glsl()
+        glsl(),
+        externalizeDeps({
+            include: ['react', 'react-dom']
+        })
     ]
 })
