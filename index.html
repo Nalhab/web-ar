@@ -39,12 +39,20 @@
   <!--
   <script src="./jsm/libs/ammo.wasm.js"></script>
   -->
- <script type="module">
-    //import { DevUI } from 'https://cdn.jsdelivr.net/npm/@iwer/devui@0.2.1/lib/index.js';
-    //import { XRDevice, metaQuest3 } from 'https://cdn.jsdelivr.net/npm/iwer@1.0.4/lib/index.js';
-    import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.142.0/build/three.module.js';
-    import './main.js';
- </script>
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://unpkg.com/three@0.155.0/build/three.module.js",
+        "three/examples/jsm/": "https://unpkg.com/three@0.155.0/examples/jsm/",
+        "three/examples/jsm/webxr/XRButton.js"  https://unpkg.com/three@0.155.0/examples/jsm/webxr/xrbutton.js",
+        "three/examples/jsm/loaders/GLTFLoader.js": "https://unpkg.com/three@0.155.0/examples/jsm/loaders/GLTFLoader.js",
+        "three/examples/jsm/controls/OrbitControls.js": "https://unpkg.com/three@0.155.0/examples/jsm/controls/OrbitControls.js",
+        "iwer": "https://cdn.jsdelivr.net/npm/iwer@1.0.4/lib/index.js",
+        "@iwer/devui": "https://cdn.jsdelivr.net/npm/@iwer/devui@0.2.1/lib/index.js"
+      }
+    }
+  </script>
+ <script type="module" src="./main.js"></script>
 </body>
 
 </html>
