@@ -59,17 +59,25 @@ class MenuUI {
   
       window.addEventListener('click', (event) => {
         if (!this.isMenuActive) return;
-  
-        pointer.x = (event.clientX / window.innerWidth) * 2 - 1;
-        pointer.y = -(event.clientY / window.innerHeight) * 2 + 1;
-  
-        raycaster.setFromCamera(pointer, this.camera);
-        const intersects = raycaster.intersectObject(this.playButton);
-  
-        if (intersects.length > 0) {
-          this.startGame();
+
+        try {
+            pointer.x = (event.clientX / window.innerWidth) * 2 - 1;
+            pointer.y = -(event.clientY / window.innerHeight) * 2 + 1;
+
+            raycaster.setFromCamera(pointer, this.camera);
+            // Assurez-vous que this.playButton est bien dans la scène
+            const intersects = raycaster.intersectObjects([this.playButton], true);
+
+            console.log('Click detected', intersects.length); // Debug
+
+            if (intersects.length > 0) {
+                console.log('Hit detected'); // Debug
+                this.startGame();
+            }
+        } catch (error) {
+            console.error('Error in click handler:', error);
         }
-      });
+    });
     }
   
     startGame() {
