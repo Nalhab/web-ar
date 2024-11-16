@@ -24,7 +24,8 @@ export default defineConfig({
             '@fortawesome/free-solid-svg-icons',
             '@fortawesome/react-fontawesome',
             'react',
-            'react-dom'
+            'react-dom',
+            'gl-matrix'
         ]
     },
     esbuild: {
@@ -73,7 +74,8 @@ export default defineConfig({
             '@emotion/memoize': '@emotion/memoize',
             '@fortawesome/fontawesome-svg-core': '@fortawesome/fontawesome-svg-core',
             '@fortawesome/free-solid-svg-icons': '@fortawesome/free-solid-svg-icons',
-            '@fortawesome/react-fontawesome': '@fortawesome/react-fontawesome'
+            '@fortawesome/react-fontawesome': '@fortawesome/react-fontawesome',
+            'gl-matrix': 'gl-matrix'
         }
     },
 })
