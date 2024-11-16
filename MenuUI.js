@@ -62,30 +62,47 @@ class MenuUI {
         this.controller = window.renderer.xr.getController(0);
         this.controller.addEventListener('select', () => {
             if (!this.isMenuActive) return;
-
-            // Créer un raycaster depuis le contrôleur
-            const raycaster = new THREE.Raycaster();
+    
+            // Utiliser la même méthode que pour les cônes
             const tempMatrix = new THREE.Matrix4();
             tempMatrix.identity().extractRotation(this.controller.matrixWorld);
-            raycaster.ray.origin.setFromMatrixPosition(this.controller.matrixWorld);
-            raycaster.ray.direction.set(0, 0, -1).applyMatrix4(tempMatrix);
-
-            const intersects = raycaster.intersectObjects([this.playButton], true);
+            
+            // Position du rayon depuis le contrôleur
+            const raycaster = new THREE.Raycaster();
+            const rayOrigin = new THREE.Vector3();
+            rayOrigin.setFromMatrixPosition(this.controller.matrixWorld);
+            
+            // Direction du rayon (avant du contrôleur)
+            const rayDirection = new THREE.Vector3(0, 0, -1);
+            rayDirection.applyMatrix4(tempMatrix);
+            
+            raycaster.set(rayOrigin, rayDirection);
+            
+            // Debug
+            console.log('Controller position:', rayOrigin);
+            console.log('Ray direction:', rayDirection);
+            
+            const intersects = raycaster.intersectObject(this.playButton, true);
             
             if (intersects.length > 0) {
-                console.log('VR button hit');
+                console.log('Menu hit at distance:', intersects[0].distance);
                 this.startGame();
             }
         });
         scene.add(this.controller);
-
-        // Ligne de visée pour debug
+    
+        // Ligne de visée plus visible pour debug
         const geometry = new THREE.BufferGeometry().setFromPoints([
             new THREE.Vector3(0, 0, 0),
-            new THREE.Vector3(0, 0, -1)
+            new THREE.Vector3(0, 0, -10) // Plus longue ligne
         ]);
-        const line = new THREE.Line(geometry);
-        line.scale.z = 5;
+        
+        const material = new THREE.LineBasicMaterial({
+            color: 0xff0000,
+            linewidth: 2
+        });
+        
+        const line = new THREE.Line(geometry, material);
         this.controller.add(line);
     }
   
