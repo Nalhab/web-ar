@@ -61,7 +61,7 @@ export default defineConfig({
         }
     },
     server: {
-        open: true
+        open: false
     },
     plugins: [
         react(),

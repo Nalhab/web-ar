@@ -22,13 +22,15 @@ import { XRButton } from 'three/examples/jsm/webxr/XRButton.js';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 
+import { MenuUI } from './MenuUI.js';
+
 async function setupXR(xrMode) {
-  // if (xrMode !== 'immersive-vr') return;
-  // let nativeWebXRSupport = false;
-  // if (navigator.xr) {
-  //   nativeWebXRSupport = await navigator.xr.isSessionSupported(xrMode);
-  // }
-  // if (!nativeWebXRSupport) {
+  if (xrMode !== 'immersive-vr') return;
+  let nativeWebXRSupport = false;
+  if (navigator.xr) {
+    nativeWebXRSupport = await navigator.xr.isSessionSupported(xrMode);
+  }
+  if (!nativeWebXRSupport) {
     const xrDevice = new XRDevice(metaQuest3);
     xrDevice.installRuntime();
     xrDevice.fovy = (75 / 180) * Math.PI;
@@ -49,7 +51,7 @@ async function setupXR(xrMode) {
       0.9887216687202454,
     );
     new DevUI(xrDevice);
-  // }
+  }
 }
 
 await setupXR('immersive-ar');
@@ -59,14 +61,10 @@ let controller;
 
 const clock = new Clock();
 
-const animate = () => {
-  const delta = clock.getDelta();
-  const elapsed = clock.getElapsedTime();
-  renderer.render(scene, camera);
-};
-
 const init = () => {
   scene = new Scene();
+
+  let canDraw = false;
 
   const aspect = window.innerWidth / window.innerHeight;
   camera = new PerspectiveCamera(75, aspect, 0.1, 10);
@@ -78,6 +76,17 @@ const init = () => {
   const hemiLight = new HemisphereLight(0xffffff, 0xbbbbff, 3);
   hemiLight.position.set(0.5, 1, 0.25);
   scene.add(hemiLight);
+
+  const menuUI = new MenuUI(camera, scene, () => {
+    canDraw = true;
+  });
+
+  const animate = () => {
+    const delta = clock.getDelta();
+    const elapsed = clock.getElapsedTime();
+    menuUI.update();
+    renderer.render(scene, camera);
+  };
 
   renderer = new WebGLRenderer({ antialias: true, alpha: true });
   renderer.setPixelRatio(window.devicePixelRatio);
@@ -97,6 +106,8 @@ const init = () => {
   const geometry = new CylinderGeometry(0, 0.05, 0.2, 32).rotateX(Math.PI / 2);
 
   const onSelect = (event) => {
+    if (!canDraw) return;
+
     const material = new MeshPhongMaterial({ color: 0xffffff * Math.random() });
     const mesh = new Mesh(geometry, material);
     mesh.position.set(0, 0, -0.3).applyMatrix4(controller.matrixWorld);
