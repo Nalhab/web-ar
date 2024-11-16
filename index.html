@@ -39,7 +39,12 @@
   <!--
   <script src="./jsm/libs/ammo.wasm.js"></script>
   -->
- <script type="module" src="./main.js"></script>
+ <script type="module">
+    //import { DevUI } from 'https://cdn.jsdelivr.net/npm/@iwer/devui@0.2.1/lib/index.js';
+    //import { XRDevice, metaQuest3 } from 'https://cdn.jsdelivr.net/npm/iwer@1.0.4/lib/index.js';
+    import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.142.0/build/three.module.js';
+    import './main.js';
+ </script>
 </body>
 
 </html>
