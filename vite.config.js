@@ -41,7 +41,10 @@ export default defineConfig({
                 'react-dom', 
                 'react/jsx-runtime',
                 'shallowequal',
-                'styled-components'
+                'styled-components',
+                '@fortawesome/fontawesome-svg-core',
+                '@fortawesome/free-solid-svg-icons',
+                '@fortawesome/react-fontawesome'
             ],
             output: {
                 format: 'esm',
@@ -49,7 +52,10 @@ export default defineConfig({
                     react: 'React',
                     'react-dom': 'ReactDOM',
                     'react/jsx-runtime': 'jsxRuntime',
-                    'shallowequal': 'shallowequal'
+                    'shallowequal': 'shallowequal',
+                    '@fortawesome/fontawesome-svg-core': 'FontAwesomeCore',
+                    '@fortawesome/free-solid-svg-icons': 'FontAwesomeSolidIcons',
+                    '@fortawesome/react-fontawesome': 'FontAwesomeReact'
                 }
             }
         }
