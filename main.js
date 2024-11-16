@@ -23,28 +23,6 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 
 async function setupXR(xrMode) {
-  // Detect iOS
-  const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
-
-  if (isIOS) {
-    // Add message for iOS users
-    const iosMessage = document.createElement('div');
-    iosMessage.style.position = 'fixed';
-    iosMessage.style.bottom = '20px';
-    iosMessage.style.left = '20px';
-    iosMessage.style.background = 'rgba(0,0,0,0.7)';
-    iosMessage.style.color = 'white';
-    iosMessage.style.padding = '10px';
-    iosMessage.style.borderRadius = '5px';
-    iosMessage.innerHTML = `
-      Pour utiliser l'AR sur iOS:<br>
-      1. Installez <a href="https://apps.apple.com/fr/app/webxr-viewer/id1295998056" style="color:skyblue">WebXR Viewer</a><br>
-      2. Ouvrez cette page dans WebXR Viewer
-    `;
-    document.body.appendChild(iosMessage);
-    return;
-  }
-
   if (xrMode !== 'immersive-vr') return;
   let nativeWebXRSupport = false;
   if (navigator.xr) {
