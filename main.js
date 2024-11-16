@@ -23,6 +23,7 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 
 import { MenuUI } from './MenuUI.js';
+import { render } from 'react-dom';
 
 async function setupXR(xrMode) {
   if (xrMode !== 'immersive-vr') return;
@@ -114,6 +115,8 @@ const init = () => {
     mesh.quaternion.setFromRotationMatrix(controller.matrixWorld);
     scene.add(mesh);
   };
+
+  window.renderer = renderer;
 
   controller = renderer.xr.getController(0);
   controller.addEventListener('select', onSelect);

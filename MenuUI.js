@@ -51,6 +51,42 @@ class MenuUI {
                 this.menuGroup.lookAt(camera.position);
             }
         };
+
+        this.setupXRControllers(scene);
+    }
+
+    setupXRControllers(scene) {
+        if (!window.renderer) return;
+        
+        // Contrôleur droit
+        this.controller = window.renderer.xr.getController(0);
+        this.controller.addEventListener('select', () => {
+            if (!this.isMenuActive) return;
+
+            // Créer un raycaster depuis le contrôleur
+            const raycaster = new THREE.Raycaster();
+            const tempMatrix = new THREE.Matrix4();
+            tempMatrix.identity().extractRotation(this.controller.matrixWorld);
+            raycaster.ray.origin.setFromMatrixPosition(this.controller.matrixWorld);
+            raycaster.ray.direction.set(0, 0, -1).applyMatrix4(tempMatrix);
+
+            const intersects = raycaster.intersectObjects([this.playButton], true);
+            
+            if (intersects.length > 0) {
+                console.log('VR button hit');
+                this.startGame();
+            }
+        });
+        scene.add(this.controller);
+
+        // Ligne de visée pour debug
+        const geometry = new THREE.BufferGeometry().setFromPoints([
+            new THREE.Vector3(0, 0, 0),
+            new THREE.Vector3(0, 0, -1)
+        ]);
+        const line = new THREE.Line(geometry);
+        line.scale.z = 5;
+        this.controller.add(line);
     }
   
     setupInteractions() {
