@@ -14,6 +14,7 @@ export default defineConfig({
         },
         include: [
             'three',
+            'tslib',
             '@fortawesome/fontawesome-svg-core',
             '@fortawesome/free-solid-svg-icons',
             '@fortawesome/react-fontawesome',
@@ -59,6 +60,7 @@ export default defineConfig({
     resolve: {
         alias: {
             'three': 'three',
+            'tslib': 'tslib',
             '@fortawesome/fontawesome-svg-core': '@fortawesome/fontawesome-svg-core',
             '@fortawesome/free-solid-svg-icons': '@fortawesome/free-solid-svg-icons',
             '@fortawesome/react-fontawesome': '@fortawesome/react-fontawesome'
