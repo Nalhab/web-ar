@@ -29,7 +29,7 @@ export default defineConfig({
                     'react-dom': 'ReactDOM',
                     'react/jsx-runtime': 'jsxRuntime',
                     'react-dom/client': 'ReactDOMClient',
-                    three: 'THREE'
+                    'three': 'THREE'
                 }
             }
         }
