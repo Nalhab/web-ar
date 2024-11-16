@@ -1,7 +1,7 @@
 import { defineConfig } from 'vite';
 import { viteStaticCopy } from 'vite-plugin-static-copy';
 import glsl from 'vite-plugin-glsl';
-import externalizeDeps from 'vite-plugin-externalize-deps';
+import { externalizeDeps } from 'vite-plugin-externalize-deps';
 
 export default defineConfig({
     base: "/three_vite_xr",
