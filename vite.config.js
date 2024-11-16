@@ -15,6 +15,7 @@ export default defineConfig({
         include: [
             'three',
             'tslib',
+            'shallowequal',
             '@emotion/is-prop-valid',
             '@fortawesome/fontawesome-svg-core',
             '@fortawesome/free-solid-svg-icons',
@@ -62,6 +63,7 @@ export default defineConfig({
         alias: {
             'three': 'three',
             'tslib': 'tslib',
+            'shallowequal': 'shallowequal',
             '@emotion/is-prop-valid': '@emotion/is-prop-valid',
             '@fortawesome/fontawesome-svg-core': '@fortawesome/fontawesome-svg-core',
             '@fortawesome/free-solid-svg-icons': '@fortawesome/free-solid-svg-icons',
