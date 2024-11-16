@@ -23,12 +23,12 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 
 async function setupXR(xrMode) {
-  if (xrMode !== 'immersive-vr') return;
-  let nativeWebXRSupport = false;
-  if (navigator.xr) {
-    nativeWebXRSupport = await navigator.xr.isSessionSupported(xrMode);
-  }
-  if (!nativeWebXRSupport) {
+  // if (xrMode !== 'immersive-vr') return;
+  // let nativeWebXRSupport = false;
+  // if (navigator.xr) {
+  //   nativeWebXRSupport = await navigator.xr.isSessionSupported(xrMode);
+  // }
+  // if (!nativeWebXRSupport) {
     const xrDevice = new XRDevice(metaQuest3);
     xrDevice.installRuntime();
     xrDevice.fovy = (75 / 180) * Math.PI;
@@ -49,7 +49,7 @@ async function setupXR(xrMode) {
       0.9887216687202454,
     );
     new DevUI(xrDevice);
-  }
+  // }
 }
 
 await setupXR('immersive-ar');
