@@ -20,6 +20,12 @@ export default defineConfig({
         open: true,
         https: true
     },
+    resolve: {
+        alias: {
+            'three': '/node_modules/three/build/three.module.js',
+            'three/examples/jsm/': '/node_modules/three/examples/jsm/'
+        }
+    },
     optimizeDeps: {
         include: [
             'react', 
@@ -36,11 +42,6 @@ export default defineConfig({
         sourcemap: true,
         commonjsOptions: {
             include: [/node_modules/]
-        }
-    },
-    resolve: {
-        alias: {
-            'three': 'three'
         }
     }
 });
