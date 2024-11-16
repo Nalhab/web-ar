@@ -19,6 +19,7 @@ export default defineConfig({
             'stylis',
             '@emotion/is-prop-valid',
             '@emotion/unitless',
+            '@emotion/memoize',
             '@fortawesome/fontawesome-svg-core',
             '@fortawesome/free-solid-svg-icons',
             '@fortawesome/react-fontawesome',
@@ -69,6 +70,7 @@ export default defineConfig({
             'stylis': 'stylis',
             '@emotion/is-prop-valid': '@emotion/is-prop-valid',
             '@emotion/unitless': '@emotion/unitless',
+            '@emotion/memoize': '@emotion/memoize',
             '@fortawesome/fontawesome-svg-core': '@fortawesome/fontawesome-svg-core',
             '@fortawesome/free-solid-svg-icons': '@fortawesome/free-solid-svg-icons',
             '@fortawesome/react-fontawesome': '@fortawesome/react-fontawesome'
