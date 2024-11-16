@@ -42,9 +42,9 @@ class MenuUI {
         this.playButton.add(textMesh);
         this.menuGroup.add(this.playButton);
         scene.add(this.menuGroup);
+        scene.add(this.playButton);
         
         this.isMenuActive = true;
-        this.setupInteractions();
 
         this.update = () => {
             if (this.isMenuActive) {
@@ -104,6 +104,8 @@ class MenuUI {
         
         const line = new THREE.Line(geometry, material);
         this.controller.add(line);
+
+        this.setupInteractions();
     }
   
     setupInteractions() {
