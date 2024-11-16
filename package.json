@@ -23,6 +23,8 @@
   "dependencies": {
     "@iwer/devui": "^0.1.1",
     "iwer": "^1.0.4",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
     "three": "^0.169.0"
   }
 }

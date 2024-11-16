@@ -22,6 +22,9 @@ import { XRButton } from 'three/examples/jsm/webxr/XRButton.js';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 
+import React from 'react';
+import ReactDOM from 'react-dom';
+
 async function setupXR(xrMode) {
   if (xrMode !== 'immersive-vr') return;
   let nativeWebXRSupport = false;
