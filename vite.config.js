@@ -22,14 +22,12 @@ export default defineConfig({
     build: {
         sourcemap: true,
         rollupOptions: {
-            external: ['react', 'react-dom', 'react/jsx-runtime', 'react-dom/client', 'three'],
+            external: ['react', 'react-dom', 'react/jsx-runtime'],
             output: {
                 globals: {
                     react: 'React',
                     'react-dom': 'ReactDOM',
-                    'react/jsx-runtime': 'jsxRuntime',
-                    'react-dom/client': 'ReactDOMClient',
-                    'three': 'THREE'
+                    'react/jsx-runtime': 'jsxRuntime'
                 }
             }
         }
