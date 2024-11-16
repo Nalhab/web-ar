@@ -12,7 +12,14 @@ export default defineConfig({
                 'top-level-await': true
             }
         },
-        include: ['react', 'react-dom']
+        include: [
+            'three',
+            '@fortawesome/fontawesome-svg-core',
+            '@fortawesome/free-solid-svg-icons',
+            '@fortawesome/react-fontawesome',
+            'react',
+            'react-dom'
+        ]
     },
     esbuild: {
         supported: {
@@ -48,5 +55,13 @@ export default defineConfig({
             ]
         }),
         glsl()
-    ]
+    ],
+    resolve: {
+        alias: {
+            'three': 'three',
+            '@fortawesome/fontawesome-svg-core': '@fortawesome/fontawesome-svg-core',
+            '@fortawesome/free-solid-svg-icons': '@fortawesome/free-solid-svg-icons',
+            '@fortawesome/react-fontawesome': '@fortawesome/react-fontawesome'
+        }
+    },
 })
