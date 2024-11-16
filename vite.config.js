@@ -17,12 +17,30 @@ export default defineConfig({
         glsl()
     ],
     server: {
-        open: true
+        open: true,
+        https: true
     },
     optimizeDeps: {
-        include: ['react', 'react-dom']
+        include: [
+            'react', 
+            'react-dom',
+            'three',
+            'three/examples/jsm/webxr/XRButton.js',
+            'three/examples/jsm/controls/OrbitControls.js',
+            'three/examples/jsm/loaders/GLTFLoader.js',
+            'iwer',
+            '@iwer/devui'
+        ]
     },
     build: {
-        sourcemap: true
+        sourcemap: true,
+        commonjsOptions: {
+            include: [/node_modules/]
+        }
+    },
+    resolve: {
+        alias: {
+            'three': 'three'
+        }
     }
 });

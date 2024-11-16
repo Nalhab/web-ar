@@ -55,8 +55,6 @@ async function setupXR(xrMode) {
   }
 }
 
-await setupXR('immersive-ar');
-
 let camera, scene, renderer;
 let controller;
 
@@ -120,4 +118,7 @@ const onWindowResize = () => {
   renderer.setSize(window.innerWidth, window.innerHeight);
 };
 
-init();
+(async () => {
+  await setupXR('immersive-ar');
+  init();
+})();
