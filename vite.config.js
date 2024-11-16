@@ -36,12 +36,20 @@ export default defineConfig({
     build: {
         sourcemap: true,
         rollupOptions: {
-            external: ['react', 'react-dom', 'react/jsx-runtime'],
+            external: [
+                'react', 
+                'react-dom', 
+                'react/jsx-runtime',
+                'shallowequal',
+                'styled-components'
+            ],
             output: {
+                format: 'esm',
                 globals: {
                     react: 'React',
                     'react-dom': 'ReactDOM',
-                    'react/jsx-runtime': 'jsxRuntime'
+                    'react/jsx-runtime': 'jsxRuntime',
+                    'shallowequal': 'shallowequal'
                 }
             }
         }
