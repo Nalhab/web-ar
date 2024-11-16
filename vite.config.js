@@ -22,7 +22,7 @@ export default defineConfig({
         sourcemap: true,
     },
     server: {
-        open: false
+        open: true
     },
     plugins: [
         viteStaticCopy({
