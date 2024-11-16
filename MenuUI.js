@@ -54,42 +54,53 @@ class MenuUI {
     }
   
     setupInteractions() {
-      const raycaster = new THREE.Raycaster();
-      const pointer = new THREE.Vector2();
-  
-      window.addEventListener('click', (event) => {
-        if (!this.isMenuActive) return;
-
-        try {
-            pointer.x = (event.clientX / window.innerWidth) * 2 - 1;
-            pointer.y = -(event.clientY / window.innerHeight) * 2 + 1;
-
-            raycaster.setFromCamera(pointer, this.camera);
-            // Assurez-vous que this.playButton est bien dans la scène
-            const intersects = raycaster.intersectObjects([this.playButton], true);
-
-            console.log('Click detected', intersects.length); // Debug
-
-            if (intersects.length > 0) {
-                console.log('Hit detected'); // Debug
-                this.startGame();
+        const raycaster = new THREE.Raycaster();
+        const pointer = new THREE.Vector2();
+    
+        const handleInteraction = (clientX, clientY) => {
+            if (!this.isMenuActive) return;
+    
+            try {
+                pointer.x = (clientX / window.innerWidth) * 2 - 1;
+                pointer.y = -(clientY / window.innerHeight) * 2 + 1;
+    
+                raycaster.setFromCamera(pointer, this.camera);
+                const intersects = raycaster.intersectObjects([this.playButton], true);
+    
+                console.log('Interaction detected', intersects.length);
+    
+                if (intersects.length > 0) {
+                    console.log('Hit detected');
+                    this.startGame();
+                }
+            } catch (error) {
+                console.error('Error in interaction handler:', error);
             }
-        } catch (error) {
-            console.error('Error in click handler:', error);
-        }
-    });
+        };
+    
+        // Gestion des clics souris
+        window.addEventListener('click', (event) => {
+            handleInteraction(event.clientX, event.clientY);
+        });
+    
+        // Gestion des événements tactiles
+        window.addEventListener('touchstart', (event) => {
+            event.preventDefault(); // Empêche le double événement sur certains navigateurs
+            const touch = event.touches[0];
+            handleInteraction(touch.clientX, touch.clientY);
+        });
     }
   
     startGame() {
-      this.isMenuActive = false;
-      this.menuGroup.visible = false;
-      if (this.onGameStart) {
-        this.onGameStart();
-      }
+        this.isMenuActive = false;
+        this.menuGroup.visible = false;
+        if (this.onGameStart) {
+            this.onGameStart();
+        }
     }
   
     isDrawingAllowed() {
-      return !this.isMenuActive;
+        return !this.isMenuActive;
     }
 }
 
