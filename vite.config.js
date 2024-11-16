@@ -3,7 +3,7 @@ import { viteStaticCopy } from 'vite-plugin-static-copy';
 import glsl from 'vite-plugin-glsl';
 
 export default defineConfig({
-    base: "/web-ar",
+    base: "/three_vite_xr",
     clearScreen: false,
     optimizeDeps: {
         esbuildOptions: {
@@ -21,7 +21,7 @@ export default defineConfig({
         sourcemap: true,
     },
     server: {
-        open: false
+        open: true
     },
     plugins: [
         viteStaticCopy({
@@ -37,4 +37,3 @@ export default defineConfig({
         glsl()
     ]
 })
-
