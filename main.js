@@ -64,32 +64,65 @@ let controller;
 
 const clock = new Clock();
 
-let placingEnabled = false; // Drapeau pour activer/désactiver le placement
+let placingEnabled = false;
 let playButton;
+let audioBuffer;
+let musicBuffer;
+let listener;
 
-// Fonction pour créer un bouton "Play"
+const loadAudio = () => {
+  listener = new THREE.AudioListener();
+  camera.add(listener);
+
+  const audioLoader = new THREE.AudioLoader();
+  audioLoader.load('public/play_sound_effect.mp3', (buffer) => {
+    audioBuffer = buffer;
+  });
+
+  audioLoader.load('public/music.mp3', (buffer) => {
+    musicBuffer = buffer;
+  });
+};
+
+const playSound = () => {  
+  const sound = new THREE.Audio(listener);
+  sound.setBuffer(audioBuffer);
+  sound.setLoop(false);
+  sound.setVolume(0.5);
+  sound.play();
+};
+
+const playMusic = () => {
+  const music = new THREE.Audio(listener);
+  music.setBuffer(musicBuffer);
+  music.setLoop(true);
+  music.setVolume(0.5);
+  setTimeout(() => {
+    music.play();
+  }, 1000);
+};
+
 const createPlayButton = () => {
   const buttonGeometry = new BoxGeometry(0.2, 0.1, 0.05);
   const buttonMaterial = new MeshPhongMaterial({ color: 0xff0000 });
   playButton = new Mesh(buttonGeometry, buttonMaterial);
-  playButton.position.set(0, 0, -0.5); // Place initialement devant la caméra
+  playButton.position.set(0, 0, -0.5);
   scene.add(playButton);
+
+  const loader = new FontLoader();
+  loader.load('https://threejs.org/examples/fonts/helvetiker_regular.typeface.json', (font) => {
+    const textGeometry = new TextGeometry('Play', {
+      font: font,
+      size: 0.05,
+      height: 0.01,
+    });
+    const textMaterial = new MeshBasicMaterial({ color: 0xffffff });
+    const textMesh = new Mesh(textGeometry, textMaterial);
+    textMesh.position.set(-0.06, -0.02, 0.03);
+    playButton.add(textMesh);
+  });
 };
 
-const loader = new FontLoader();
-loader.load('https://threejs.org/examples/fonts/helvetiker_regular.typeface.json', (font) => {
-  const textGeometry = new TextGeometry('Play', {
-    font: font,
-    size: 0.05,
-    height: 0.01,
-  });
-  const textMaterial = new MeshBasicMaterial({ color: 0xffffff });
-  const textMesh = new Mesh(textGeometry, textMaterial);
-  textMesh.position.set(-0.06, -0.02, 0.03);
-  playButton.add(textMesh);
-});
-
-// Détecte le clic sur le bouton
 const checkButtonClick = (event) => {
   const raycaster = new THREE.Raycaster();
   const tempMatrix = new THREE.Matrix4();
@@ -100,13 +133,13 @@ const checkButtonClick = (event) => {
 
   const intersects = raycaster.intersectObject(playButton);
   if (intersects.length > 0) {
-    // Activer la fonctionnalité et désactiver le bouton
     placingEnabled = true;
     scene.remove(playButton);
+    playSound();
+    playMusic();
   }
 };
 
-// Modifiez la fonction `onSelect` pour ne placer des cônes que si `placingEnabled` est activé
 const onSelect = (event) => {
   if (!placingEnabled) return;
 
@@ -117,13 +150,11 @@ const onSelect = (event) => {
   scene.add(mesh);
 };
 
-// Modifiez la fonction `animate` pour que le bouton suive la caméra
 const animate = () => {
   const delta = clock.getDelta();
   const elapsed = clock.getElapsedTime();
 
   if (playButton) {
-    // Maintient le bouton "Play" devant la caméra
     playButton.position.set(0, -0.2, -0.5).applyMatrix4(camera.matrixWorld);
     playButton.quaternion.copy(camera.quaternion);
   }
@@ -166,6 +197,7 @@ const init = () => {
   scene.add(controller);
 
   createPlayButton();
+  loadAudio();
 
   window.addEventListener('resize', onWindowResize, false);
 };
