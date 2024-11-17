@@ -81,7 +81,7 @@ loader.load('https://threejs.org/examples/fonts/helvetiker_regular.typeface.json
   const textGeometry = new TextGeometry('Play', {
     font: font,
     size: 0.05,
-    depth: 0.01,
+    depth: 0
   });
   const textMaterial = new MeshBasicMaterial({ color: 0xffffff });
   const textMesh = new Mesh(textGeometry, textMaterial);
