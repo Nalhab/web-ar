@@ -22,8 +22,7 @@ import { XRButton } from 'three/examples/jsm/webxr/XRButton.js';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 
-import { MenuUI } from './MenuUI.js';
-import { render } from 'react-dom';
+import * as THREE from 'three';
 
 async function setupXR(xrMode) {
   if (xrMode !== 'immersive-vr') return;
@@ -62,10 +61,62 @@ let controller;
 
 const clock = new Clock();
 
+let placingEnabled = false; // Drapeau pour activer/désactiver le placement
+let playButton;
+
+// Fonction pour créer un bouton "Play"
+const createPlayButton = () => {
+  const buttonGeometry = new CylinderGeometry(0.1, 0.1, 0.02, 32);
+  const buttonMaterial = new MeshPhongMaterial({ color: 0x00ff00 });
+  playButton = new Mesh(buttonGeometry, buttonMaterial);
+  playButton.position.set(0, 0, -0.5); // Place initialement devant la caméra
+  scene.add(playButton);
+};
+
+// Détecte le clic sur le bouton
+const checkButtonClick = (event) => {
+  const raycaster = new THREE.Raycaster();
+  const tempMatrix = new THREE.Matrix4();
+  tempMatrix.identity().extractRotation(controller.matrixWorld);
+
+  raycaster.ray.origin.setFromMatrixPosition(controller.matrixWorld);
+  raycaster.ray.direction.set(0, 0, -1).applyMatrix4(tempMatrix);
+
+  const intersects = raycaster.intersectObject(playButton);
+  if (intersects.length > 0) {
+    // Activer la fonctionnalité et désactiver le bouton
+    placingEnabled = true;
+    scene.remove(playButton);
+  }
+};
+
+// Modifiez la fonction `onSelect` pour ne placer des cônes que si `placingEnabled` est activé
+const onSelect = (event) => {
+  if (!placingEnabled) return;
+
+  const material = new MeshPhongMaterial({ color: 0xffffff * Math.random() });
+  const mesh = new Mesh(new CylinderGeometry(0, 0.05, 0.2, 32).rotateX(Math.PI / 2), material);
+  mesh.position.set(0, 0, -0.3).applyMatrix4(controller.matrixWorld);
+  mesh.quaternion.setFromRotationMatrix(controller.matrixWorld);
+  scene.add(mesh);
+};
+
+// Modifiez la fonction `animate` pour que le bouton suive la caméra
+const animate = () => {
+  const delta = clock.getDelta();
+  const elapsed = clock.getElapsedTime();
+
+  if (playButton) {
+    // Maintient le bouton "Play" devant la caméra
+    playButton.position.set(0, -0.2, -0.5).applyMatrix4(camera.matrixWorld);
+    playButton.quaternion.copy(camera.quaternion);
+  }
+
+  renderer.render(scene, camera);
+};
+
 const init = () => {
   scene = new Scene();
-
-  let canDraw = false;
 
   const aspect = window.innerWidth / window.innerHeight;
   camera = new PerspectiveCamera(75, aspect, 0.1, 10);
@@ -77,17 +128,6 @@ const init = () => {
   const hemiLight = new HemisphereLight(0xffffff, 0xbbbbff, 3);
   hemiLight.position.set(0.5, 1, 0.25);
   scene.add(hemiLight);
-
-  const menuUI = new MenuUI(camera, scene, () => {
-    canDraw = true;
-  });
-
-  const animate = () => {
-    const delta = clock.getDelta();
-    const elapsed = clock.getElapsedTime();
-    menuUI.update();
-    renderer.render(scene, camera);
-  };
 
   renderer = new WebGLRenderer({ antialias: true, alpha: true });
   renderer.setPixelRatio(window.devicePixelRatio);
@@ -104,23 +144,12 @@ const init = () => {
   controls.target.set(0, 1.6, 0);
   controls.update();
 
-  const geometry = new CylinderGeometry(0, 0.05, 0.2, 32).rotateX(Math.PI / 2);
-
-  const onSelect = (event) => {
-    if (!canDraw) return;
-
-    const material = new MeshPhongMaterial({ color: 0xffffff * Math.random() });
-    const mesh = new Mesh(geometry, material);
-    mesh.position.set(0, 0, -0.3).applyMatrix4(controller.matrixWorld);
-    mesh.quaternion.setFromRotationMatrix(controller.matrixWorld);
-    scene.add(mesh);
-  };
-
-  window.renderer = renderer;
-
   controller = renderer.xr.getController(0);
   controller.addEventListener('select', onSelect);
+  controller.addEventListener('select', checkButtonClick);
   scene.add(controller);
+
+  createPlayButton();
 
   window.addEventListener('resize', onWindowResize, false);
 };
