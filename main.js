@@ -70,6 +70,7 @@ let audioBuffer;
 let musicBuffer;
 let listener;
 let timerMesh;
+let messageMesh;
 
 const loadAudio = () => {
   listener = new THREE.AudioListener();
@@ -162,6 +163,24 @@ const startTimer = (duration) => {
   }, 1000);
 };
 
+const displayMessage = (message) => {
+  if (messageMesh) {
+    scene.remove(messageMesh);
+  }
+  const loader = new FontLoader();
+  loader.load('https://threejs.org/examples/fonts/helvetiker_regular.typeface.json', (font) => {
+    const textGeometry = new TextGeometry(message, {
+      font: font,
+      size: 0.05,
+      height: 0.01,
+    });
+    const textMaterial = new MeshBasicMaterial({ color: 0xffffff });
+    messageMesh = new Mesh(textGeometry, textMaterial);
+    messageMesh.position.set(-0.215, 1.6, -1);
+    scene.add(messageMesh);
+  });
+};
+
 const checkButtonClick = (event) => {
   if (!playButton) return;
   
@@ -181,7 +200,7 @@ const checkButtonClick = (event) => {
     playMusic();
     const bodyParts = ['head', 'shoulder', 'knee', 'toe', 'eye', 'ear', 'nose', 'mouth', 'hand', 'foot'];
     const randomIndex = Math.floor(Math.random() * bodyParts.length);
-    alert('Draw a ' + bodyParts[randomIndex] + '!');
+    displayMessage('Draw a ' + bodyParts[randomIndex] + '!');
     startTimer(60);
   }
 };
