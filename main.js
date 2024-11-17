@@ -106,24 +106,42 @@ const createPlayButton = () => {
   const buttonGeometry = new BoxGeometry(0.2, 0.1, 0.05);
   const buttonMaterial = new MeshPhongMaterial({ color: 0xff0000 });
   playButton = new Mesh(buttonGeometry, buttonMaterial);
-  playButton.position.set(0, 0, -0.5);
-  scene.add(playButton);
 
   const loader = new FontLoader();
   loader.load('https://threejs.org/examples/fonts/helvetiker_regular.typeface.json', (font) => {
-    const textGeometry = new TextGeometry('Play', {
+    const textGeometry = new TextGeometry('PLAY', {
       font: font,
       size: 0.05,
       height: 0.01,
     });
     const textMaterial = new MeshBasicMaterial({ color: 0xffffff });
     const textMesh = new Mesh(textGeometry, textMaterial);
-    textMesh.position.set(-0.06, -0.02, 0.03);
+    textMesh.position.set(-0.08, -0.02, 0.03);
     playButton.add(textMesh);
   });
 };
 
+const startTimer = (duration, display) => {
+  let timer = duration, minutes, seconds;
+  const interval = setInterval(() => {
+    minutes = parseInt(timer / 60, 10);
+    seconds = parseInt(timer % 60, 10);
+
+    minutes = minutes < 10 ? "0" + minutes : minutes;
+    seconds = seconds < 10 ? "0" + seconds : seconds;
+
+    display.textContent = minutes + ":" + seconds;
+
+    if (--timer < 0) {
+      clearInterval(interval);
+      alert('Time is up!');
+    }
+  }, 1000);
+};
+
 const checkButtonClick = (event) => {
+  if (!playButton) return;
+  
   const raycaster = new THREE.Raycaster();
   const tempMatrix = new THREE.Matrix4();
   tempMatrix.identity().extractRotation(controller.matrixWorld);
@@ -135,8 +153,14 @@ const checkButtonClick = (event) => {
   if (intersects.length > 0) {
     placingEnabled = true;
     scene.remove(playButton);
+    playButton = null;
     playSound();
     playMusic();
+    const bodyParts = ['head', 'shoulder', 'knee', 'toe', 'eye', 'ear', 'nose', 'mouth', 'hand', 'foot'];
+    const randomIndex = Math.floor(Math.random() * bodyParts.length);
+    alert('Draw a ' + bodyParts[randomIndex] + '!');
+    const timerDisplay = document.querySelector('#timer');
+    startTimer(60, timerDisplay);
   }
 };
 
@@ -144,7 +168,7 @@ const onSelect = (event) => {
   if (!placingEnabled) return;
 
   const material = new MeshPhongMaterial({ color: 0xffffff * Math.random() });
-  const mesh = new Mesh(new CylinderGeometry(0, 0.05, 0.2, 32).rotateX(Math.PI / 2), material);
+  const mesh = new Mesh(new THREE.SphereGeometry(0.04, 32, 32), material);
   mesh.position.set(0, 0, -0.3).applyMatrix4(controller.matrixWorld);
   mesh.quaternion.setFromRotationMatrix(controller.matrixWorld);
   scene.add(mesh);
@@ -154,7 +178,7 @@ const animate = () => {
   const delta = clock.getDelta();
   const elapsed = clock.getElapsedTime();
 
-  if (playButton) {
+  if (playButton && playButton.parent) {
     playButton.position.set(0, -0.2, -0.5).applyMatrix4(camera.matrixWorld);
     playButton.quaternion.copy(camera.quaternion);
   }
@@ -200,6 +224,10 @@ const init = () => {
   loadAudio();
 
   window.addEventListener('resize', onWindowResize, false);
+
+  renderer.xr.addEventListener('sessionstart', () => {
+    scene.add(playButton);
+  });
 };
 
 const onWindowResize = () => {
