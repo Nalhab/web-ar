@@ -69,6 +69,7 @@ let playButton;
 let audioBuffer;
 let musicBuffer;
 let listener;
+let timerMesh;
 
 const loadAudio = () => {
   listener = new THREE.AudioListener();
@@ -121,7 +122,29 @@ const createPlayButton = () => {
   });
 };
 
-const startTimer = (duration, display) => {
+const createTimerText = (text) => {
+  const loader = new FontLoader();
+  loader.load('https://threejs.org/examples/fonts/helvetiker_regular.typeface.json', (font) => {
+    const textGeometry = new TextGeometry(text, {
+      font: font,
+      size: 0.05,
+      height: 0.01,
+    });
+    const textMaterial = new MeshBasicMaterial({ color: 0xffffff });
+    timerMesh = new Mesh(textGeometry, textMaterial);
+    timerMesh.position.set(-0.1, 1.5, -1);
+    scene.add(timerMesh);
+  });
+};
+
+const updateTimerText = (text) => {
+  if (timerMesh) {
+    scene.remove(timerMesh);
+  }
+  createTimerText(text);
+};
+
+const startTimer = (duration) => {
   let timer = duration, minutes, seconds;
   const interval = setInterval(() => {
     minutes = parseInt(timer / 60, 10);
@@ -130,7 +153,7 @@ const startTimer = (duration, display) => {
     minutes = minutes < 10 ? "0" + minutes : minutes;
     seconds = seconds < 10 ? "0" + seconds : seconds;
 
-    display.textContent = minutes + ":" + seconds;
+    updateTimerText(minutes + ":" + seconds);
 
     if (--timer < 0) {
       clearInterval(interval);
@@ -159,8 +182,7 @@ const checkButtonClick = (event) => {
     const bodyParts = ['head', 'shoulder', 'knee', 'toe', 'eye', 'ear', 'nose', 'mouth', 'hand', 'foot'];
     const randomIndex = Math.floor(Math.random() * bodyParts.length);
     alert('Draw a ' + bodyParts[randomIndex] + '!');
-    const timerDisplay = document.querySelector('#timer');
-    startTimer(60, timerDisplay);
+    startTimer(60);
   }
 };
 
