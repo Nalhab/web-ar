@@ -133,7 +133,7 @@ const createTimerText = (text) => {
     });
     const textMaterial = new MeshBasicMaterial({ color: 0xffffff });
     timerMesh = new Mesh(textGeometry, textMaterial);
-    timerMesh.position.set(-0.1, 1.5, -1);
+    timerMesh.position.set(-0.1, 1.1, -1);
     scene.add(timerMesh);
   });
 };
@@ -176,7 +176,7 @@ const displayMessage = (message) => {
     });
     const textMaterial = new MeshBasicMaterial({ color: 0xffffff });
     messageMesh = new Mesh(textGeometry, textMaterial);
-    messageMesh.position.set(-0.215, 1.6, -1);
+    messageMesh.position.set(-0.2, 1.2, -1);
     scene.add(messageMesh);
   });
 };
