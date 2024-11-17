@@ -21,6 +21,9 @@ import { XRDevice, metaQuest3 } from 'iwer';
 import { XRButton } from 'three/examples/jsm/webxr/XRButton.js';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
+import { Font, FontLoader } from 'three/examples/jsm/Addons.js';
+import { TextGeometry } from 'three/examples/jsm/geometries/TextGeometry.js';
+import { MeshBasicMaterial } from 'three/src/materials/MeshBasicMaterial.js';
 
 import * as THREE from 'three';
 
@@ -66,12 +69,25 @@ let playButton;
 
 // Fonction pour créer un bouton "Play"
 const createPlayButton = () => {
-  const buttonGeometry = new CylinderGeometry(0.1, 0.1, 0.02, 32);
-  const buttonMaterial = new MeshPhongMaterial({ color: 0x00ff00 });
+  const buttonGeometry = new BoxGeometry(0.2, 0.1, 0.05);
+  const buttonMaterial = new MeshPhongMaterial({ color: 0xff0000 });
   playButton = new Mesh(buttonGeometry, buttonMaterial);
   playButton.position.set(0, 0, -0.5); // Place initialement devant la caméra
   scene.add(playButton);
 };
+
+const loader = new FontLoader();
+loader.load('https://threejs.org/examples/fonts/helvetiker_regular.typeface.json', (font) => {
+  const textGeometry = new TextGeometry('Play', {
+    font: font,
+    size: 0.05,
+    depth: 0.01,
+  });
+  const textMaterial = new MeshBasicMaterial({ color: 0xffffff });
+  const textMesh = new Mesh(textGeometry, textMaterial);
+  textMesh.position.set(-0.06, -0.02, 0.03);
+  playButton.add(textMesh);
+});
 
 // Détecte le clic sur le bouton
 const checkButtonClick = (event) => {
