@@ -23,7 +23,7 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { Font, FontLoader } from 'three/examples/jsm/Addons.js';
 import { TextGeometry } from 'three/examples/jsm/geometries/TextGeometry.js';
-import { MeshBasicMaterial } from 'three/src/materials/MeshBasicMaterial.js';
+import { MeshBasicMaterial } from 'three/examples/jsm/materials/MeshBasicMaterial.js';
 
 import * as THREE from 'three';
 
