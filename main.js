@@ -125,8 +125,6 @@ const createPlayButton = () => {
     textMesh.position.set(-0.08, -0.02, 0.03);
     playButton.add(textMesh);
   });
-
-  scene.add(playButton);
 };
 
 const createTimerText = (text) => {
@@ -215,7 +213,7 @@ const breakPlayButton = () => {
   const pieceGeometry = new BoxGeometry(0.05, 0.05, 0.05);
   const pieceMaterial = new MeshPhongMaterial({ color: 0xff0000 });
 
-  for (let i = 0; i < 8; i++) {
+  for (let i = 0; i < 12; i++) {
     const piece = new Mesh(pieceGeometry, pieceMaterial);
     piece.position.copy(playButton.position);
     scene.add(piece);
@@ -225,9 +223,10 @@ const breakPlayButton = () => {
     const body = new CANNON.Body({ mass: 1 });
     body.addShape(shape);
     body.position.copy(piece.position);
+    body.quaternion.copy(piece.quaternion);
     world.addBody(body);
 
-    body.applyImpulse(new CANNON.Vec3(Math.random() - 0.5, Math.random(), Math.random() - 0.5).scale(5), body.position);
+    body.applyImpulse(new CANNON.Vec3(Math.random() - 0.5, Math.random(), Math.random() - 0.5).scale(1.5), body.position);
 
     piece.userData.body = body;
   }
@@ -250,22 +249,19 @@ const animate = () => {
   const delta = clock.getDelta();
   const elapsed = clock.getElapsedTime();
 
-  // if (playButton && playButton.parent) {
-  //   playButton.position.set(0, -0.2, -0.5).applyMatrix4(camera.matrixWorld);
-  //   playButton.quaternion.copy(camera.quaternion);
-  // }
-
-  // world.step(delta);
-
   world.step(delta);
 
-  // Mettre à jour les positions des morceaux
   scene.children.forEach((child) => {
     if (child.userData.body) {
       child.position.copy(child.userData.body.position);
       child.quaternion.copy(child.userData.body.quaternion);
     }
   });
+
+  if (playButton) {
+    playButton.position.set(0, -0.2, -0.5).applyMatrix4(camera.matrixWorld);
+    playButton.quaternion.copy(camera.quaternion);
+  }
 
   renderer.render(scene, camera);
 };
