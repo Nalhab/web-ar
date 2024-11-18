@@ -71,6 +71,7 @@ let musicBuffer;
 let listener;
 let timerMesh;
 let messageMesh;
+let isDrawing = true;
 
 const world = new CANNON.World();
 world.gravity.set(0, -3, 0);
@@ -231,7 +232,7 @@ const checkButtonClick = (event) => {
     const bodyParts = ['head', 'shoulder', 'knee', 'toe', 'eye', 'ear', 'nose', 'mouth', 'hand', 'foot'];
     const randomIndex = Math.floor(Math.random() * bodyParts.length);
     displayMessage('Draw a ' + bodyParts[randomIndex] + '!');
-    startTimer(3);
+    startTimer(60);
   }
 };
 
@@ -264,7 +265,8 @@ const breakPlayButton = () => {
   }
 
   scene.remove(playButton);
-  //playButton = null;
+  playButton = null;
+  isDrawing = false;
 };
 
 const onSelect = (event) => {
@@ -337,7 +339,7 @@ const init = () => {
   window.addEventListener('resize', onWindowResize, false);
 
   renderer.xr.addEventListener('sessionstart', () => {
-    if (!playButton) {
+    if (isDrawing) {
       createPlayButton();
       scene.add(playButton);
     }
