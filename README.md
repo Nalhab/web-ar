@@ -1,136 +1,108 @@
-# three_vite_xr
-THREE.js + WebXR template using [Vite](https://vitejs.dev).
+# Web AR Anatomy Pictionary
 
-Allows testing and modifying [official THREE.js WebXR examples](https://threejs.org/examples/?q=webxr) locally, at lightning speed.
+## Description
 
-## Batteries included
+Web AR Anatomy Pictionary is an interactive augmented reality (AR) game that allows users to draw and learn human anatomy in a fun way. Using Three.js and WebXR, this project offers an immersive experience where users can interact with 3D objects and UI elements in AR.
 
-Pre-configured to support :
+## Features
 
-- WebXR initialization
-- glTF file loading
-- ammo.js wasm physics library
-  - which is fast, but you might consider using the excellent and simpler [Cannon-es](https://fdoganis.github.io/slides/cannon.html) instead
-- VSCode launch scripts
-- THREE.js type definitions : for IntelliSense in VS Code
-- recommended VS Code extensions
-- deployment
+- **Augmented Reality (AR)**: Using WebXR for an immersive experience.
+- **3D Interaction**: Integration of Three.js for manipulating 3D objects.
+- **Educational Game**: Learn human anatomy by drawing different body parts.
+- **Dynamic User Interface**: Interactive 3D buttons and texts.
+- **Sound Effects**: Sounds and music for an enriched experience.
 
-Have a look at vite.config.js and customize it to your needs (additional libraries, file formats etc.).
+## Prerequisites
+
+- Node.js (version 14 or higher)
+- npm (version 6 or higher)
 
 ## Installation
 
-Install [Node.js](https://nodejs.org)
+1. Clone the repository:
+  ```sh
+  git clone https://github.com/Nalhab/web-ar.git
+  cd web-ar
+  ```
 
-- Clone or download repo
-- run `npm install` : fetches and install all dependencies
-- `npm run dev` : launches a server and opens your browser in `https://localhost:5173` by default
-  - Edit your code : your changes are reflected instantly!
-- `npm run build` : packages all code and resources into the `dist` folder, ready for deployment.
+2. Install dependencies:
+  ```sh
+  npm install
+  ```
 
+## Alternative
 
-## HTTPS
+You can play without installing anything on this website: [Web AR Anatomy Pictionary](https://nalhab.github.io/web-ar/).
 
-HTTPS is required to use the WebXR API
+## Scripts
 
+- **Development**: To start the development server.
+  ```sh
+  npm run dev
+  ```
 
-### Using Cloudflare Tunnel for free without an account or a domain (recommended)
+- **Build**: To build the project for production.
+  ```sh
+  npm run build
+  ```
 
-  - Install [Homebrew](https://brew.sh)
+- **Clean**: To clean the build files.
+  ```sh
+  npm run clean
+  ```
 
-```bash
-  /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-```
+- **Preview Server**: To preview the production build.
+  ```sh
+  npm run preview
+  ```
 
-then follow instructions
+## Usage
 
+1. Start the development server:
+  ```sh
+  npm run dev
+  ```
 
-```bash
-echo >> /Users/XXX/.zprofile
+2. Open your browser and go to `http://localhost:5173`.
 
-echo 'eval "$(/opt/homebrew/bin/brew shellenv)"' >> /Users/XXX/.zprofile
+3. Use an AR-compatible device for the best experience.
 
-eval "$(/opt/homebrew/bin/brew shellenv)"
-```
+## How to Play
 
-  - **[Install `cloudflared`](https://developers.cloudflare.com/cloudflare-one/connections/connect-networks/downloads/)**
+First, the user will be asked to draw a body part. They will have 1 minute to draw it. Then, an alert will appear, depending on your device you will have to click "Start XR" again. During this time, the user has to give the device to the other player who will have to guess the body part.
 
-```bash
-brew install cloudflared
-```
-- run your app locally
+## Project Structure
 
-```bash
-npm run dev
-```
+- **index.html**: Main HTML file.
+- **main.js**: Main script containing the game logic and AR scene initialization.
+- **main.css**: CSS styles for the project.
+- **public/**: Folder containing public assets like 3D models and audio files.
+- **.vscode/**: Visual Studio Code editor configuration.
+- **vite.config.js**: Vite configuration for build and development.
 
-- run `cloudflared` tunnel
+## Main Dependencies
 
-```bash
-cloudflared --url http://localhost:5173/
-```
+- **Three.js**: JavaScript library for creating and displaying 3D graphics.
+- **WebXR**: API for augmented and virtual reality on the web.
+- **Cannon-es**: Physics engine for 3D simulations.
+- **React**: JavaScript library for building user interfaces.
 
-This will create a random temporary address ending in `*.trycloudflare.com`
+## Examples
 
-You can share this address by sending a link or by generating a QR code (very useful for mobile devices and some XR headsets).
+![Aperçu n°1 du projet](public/demo2.jpg)
 
-### Persistent link
+![Aperçu n°2 du projet](public/demo1.jpg)
 
-If you want more persistence, you should register a domain name, or connect your github account to [Cloudflare Pages](https://pages.cloudflare.com) for free.
+## Credits
 
-Alternatively, you could simply [use GitHub Pages to host your application persistently](https://sbcode.net/threejs/github-pages/).
+This project uses musics from Pixabay.
 
-### Tunneling alternatives
+## License
 
-Check these tunneling alternatives such as `ngrok` or `zrok` for simple personal projects, use [tunneling solutions](https://github.com/anderspitman/awesome-tunneling) 
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for more details.
 
+## Contact
 
-### Manual HTTPS setup
+Nathan - [Email](mailto:nathan.labernardiere@epita.fr)
 
-In order to use `https`, copy your certificates to the `.cert` folder, and change the `serve` command to:
-
-`"serve": "http-server dist -S -C .cert/cert.pem -K .cert/key.pem`
-
-## Deploying the App with GitHub Pages
-
-(original: https://github.com/meta-quest/webxr-first-steps?tab=readme-ov-file#build-and-deploy)
-
-This repository includes a ready-to-use GitHub Actions workflow located at `.github/workflows/deploy.yml`, which automates both the build and deployment to GitHub Pages. Once enabled, every time you push changes to the `main` branch, a new build will automatically be deployed.
-
-#### Steps to Enable GitHub Pages Deployment:
-
-0. **IMPORTANT: Set the `base` variable** in `vite.config.js` (default name `/three_vite_xr`) to the actual name of your repository. Your app will be deployed to https://[GITUSERNAME].github.io/[REPOSITORY_NAME] (for example https://fdoganis.github.io/three_vite_xr)
-1. **Fork this repository** to your own GitHub account.
-2. Navigate to your forked repository’s **Settings**.
-3. Scroll down to the **Pages** section.
-4. Under **Build and Deployment**, change the **Source** to **GitHub Actions**.
-
-Once this is set, GitHub Actions will handle the build and deployment process automatically. Any time you push changes to the `main` branch, the app will be built and deployed to GitHub Pages without any additional manual steps.
-
-You can monitor the status of the deployment job or manually re-run it via the **Actions** tab in your GitHub repository.
-
-### Deploying to Your Own Hosting Solution
-
-If you prefer to host the app yourself, you’ll need to manually build the app and then deploy the generated files to your hosting provider.
-
-To generate the build, run the following command:
-
-```bash
-npm run build
-```
-
-This will create a `dist` folder containing the static files for the app. You can then upload these files to your hosting platform of choice.
-
-
-# Credits
-
-- XR enhanced version of the original ```three_vite``` template : https://github.com/fdoganis/three_vite (MIT License)
-  
-- THREE.js WebXR code inspired by https://threejs.org/examples/webxr_ar_cones.html (MIT License)
-
-- Test model (red cube) from https://github.com/cx20/gltf-test/tree/master/sampleModels/Box (CC BY License)
-
-- Some very interesting features (emulator, github pages deployment) have been borrowed from https://github.com/meta-quest/webxr-first-steps  (MIT License)
-
-  - Make sure to check this excellent tutorial out! Even if it is mostly focused on VR, it is a great introduction on how to combine WebXR with THREE.js.
-  - See [Deployment Instructions](https://github.com/meta-quest/webxr-first-steps?tab=readme-ov-file#build-and-deploy)
+Mathieu - [Email](mailto:mathieu.cimolai@epita.fr)

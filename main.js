@@ -73,7 +73,7 @@ let timerMesh;
 let messageMesh;
 
 const world = new CANNON.World();
-world.gravity.set(0, -9.82, 0);
+world.gravity.set(0, -3, 0);
 
 const loadAudio = () => {
   listener = new THREE.AudioListener();
@@ -231,7 +231,7 @@ const checkButtonClick = (event) => {
     const bodyParts = ['head', 'shoulder', 'knee', 'toe', 'eye', 'ear', 'nose', 'mouth', 'hand', 'foot'];
     const randomIndex = Math.floor(Math.random() * bodyParts.length);
     displayMessage('Draw a ' + bodyParts[randomIndex] + '!');
-    startTimer(60);
+    startTimer(3);
   }
 };
 
@@ -253,13 +253,18 @@ const breakPlayButton = () => {
     body.quaternion.copy(piece.quaternion);
     world.addBody(body);
 
-    body.applyImpulse(new CANNON.Vec3(Math.random() - 0.5, Math.random() * 0.5, Math.random() - 0.5).scale(0.9), body.position);
+    const impulse = new CANNON.Vec3(
+      (Math.random() - 0.5) * 0.2,
+      Math.random() * 0.4,
+      (Math.random() - 0.5) * 0.2
+    );
+    body.applyImpulse(impulse, body.position);
 
     piece.userData.body = body;
   }
 
   scene.remove(playButton);
-  playButton = null;
+  //playButton = null;
 };
 
 const onSelect = (event) => {
@@ -332,8 +337,10 @@ const init = () => {
   window.addEventListener('resize', onWindowResize, false);
 
   renderer.xr.addEventListener('sessionstart', () => {
-    createPlayButton();
-    scene.add(playButton);
+    if (!playButton) {
+      createPlayButton();
+      scene.add(playButton);
+    }
   });
 };
 

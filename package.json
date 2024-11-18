@@ -1,7 +1,7 @@
 {
-  "name": "three_vite",
+  "name": "web_ar_anatomy_pictionary",
   "version": "0.0.4",
-  "author": "fdoganis",
+  "author": "nalhab",
   "license": "MIT",
   "type": "module",
   "scripts": {
