@@ -26,6 +26,7 @@ import { FontLoader } from 'three/examples/jsm/loaders/FontLoader.js';
 import { TextGeometry } from 'three/examples/jsm/geometries/TextGeometry.js';
 
 import * as THREE from 'three';
+import * as CANNON from 'cannon-es';
 
 async function setupXR(xrMode) {
   if (xrMode !== 'immersive-vr') return;
@@ -71,6 +72,9 @@ let musicBuffer;
 let listener;
 let timerMesh;
 let messageMesh;
+
+const world = new CANNON.World();
+world.gravity.set(0, -9.82, 0);
 
 const loadAudio = () => {
   listener = new THREE.AudioListener();
@@ -121,6 +125,8 @@ const createPlayButton = () => {
     textMesh.position.set(-0.08, -0.02, 0.03);
     playButton.add(textMesh);
   });
+
+  scene.add(playButton);
 };
 
 const createTimerText = (text) => {
@@ -194,8 +200,7 @@ const checkButtonClick = (event) => {
   const intersects = raycaster.intersectObject(playButton);
   if (intersects.length > 0) {
     placingEnabled = true;
-    scene.remove(playButton);
-    playButton = null;
+    breakPlayButton();
     playSound();
     playMusic();
     const bodyParts = ['head', 'shoulder', 'knee', 'toe', 'eye', 'ear', 'nose', 'mouth', 'hand', 'foot'];
@@ -203,6 +208,32 @@ const checkButtonClick = (event) => {
     displayMessage('Draw a ' + bodyParts[randomIndex] + '!');
     startTimer(60);
   }
+};
+
+const breakPlayButton = () => {
+  const pieces = [];
+  const pieceGeometry = new BoxGeometry(0.05, 0.05, 0.05);
+  const pieceMaterial = new MeshPhongMaterial({ color: 0xff0000 });
+
+  for (let i = 0; i < 8; i++) {
+    const piece = new Mesh(pieceGeometry, pieceMaterial);
+    piece.position.copy(playButton.position);
+    scene.add(piece);
+    pieces.push(piece);
+
+    const shape = new CANNON.Box(new CANNON.Vec3(0.025, 0.025, 0.025));
+    const body = new CANNON.Body({ mass: 1 });
+    body.addShape(shape);
+    body.position.copy(piece.position);
+    world.addBody(body);
+
+    body.applyImpulse(new CANNON.Vec3(Math.random() - 0.5, Math.random(), Math.random() - 0.5).scale(5), body.position);
+
+    piece.userData.body = body;
+  }
+
+  scene.remove(playButton);
+  playButton = null;
 };
 
 const onSelect = (event) => {
@@ -219,10 +250,22 @@ const animate = () => {
   const delta = clock.getDelta();
   const elapsed = clock.getElapsedTime();
 
-  if (playButton && playButton.parent) {
-    playButton.position.set(0, -0.2, -0.5).applyMatrix4(camera.matrixWorld);
-    playButton.quaternion.copy(camera.quaternion);
-  }
+  // if (playButton && playButton.parent) {
+  //   playButton.position.set(0, -0.2, -0.5).applyMatrix4(camera.matrixWorld);
+  //   playButton.quaternion.copy(camera.quaternion);
+  // }
+
+  // world.step(delta);
+
+  world.step(delta);
+
+  // Mettre à jour les positions des morceaux
+  scene.children.forEach((child) => {
+    if (child.userData.body) {
+      child.position.copy(child.userData.body.position);
+      child.quaternion.copy(child.userData.body.quaternion);
+    }
+  });
 
   renderer.render(scene, camera);
 };
