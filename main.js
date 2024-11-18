@@ -21,7 +21,6 @@ import { XRDevice, metaQuest3 } from 'iwer';
 // XR
 import { XRButton } from 'three/examples/jsm/webxr/XRButton.js';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
-import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { FontLoader } from 'three/examples/jsm/loaders/FontLoader.js';
 import { TextGeometry } from 'three/examples/jsm/geometries/TextGeometry.js';
 
@@ -143,9 +142,17 @@ const createTimerText = (text) => {
 };
 
 const updateTimerText = (text) => {
+  if (text === '00:00') {
+    return;
+  }
+
   if (timerMesh) {
     scene.remove(timerMesh);
+    timerMesh.geometry.dispose();
+    timerMesh.material.dispose();
+    timerMesh = null;
   }
+
   createTimerText(text);
 };
 
@@ -162,9 +169,29 @@ const startTimer = (duration) => {
 
     if (--timer < 0) {
       clearInterval(interval);
+
+      if (timerMesh) {
+        scene.remove(timerMesh);
+        timer = null;
+      }
+
+      updateTimerText('');
+
       alert('Time is up!');
+
+      if (messageMesh) {
+        scene.remove(messageMesh);
+      }
+
+      placingEnabled = false;
+
+      return;
     }
   }, 1000);
+
+  setTimeout(() => {
+    updateTimerText('');
+  }, 61000);
 };
 
 const displayMessage = (message) => {
@@ -226,7 +253,7 @@ const breakPlayButton = () => {
     body.quaternion.copy(piece.quaternion);
     world.addBody(body);
 
-    body.applyImpulse(new CANNON.Vec3(Math.random() - 0.5, Math.random(), Math.random() - 0.5).scale(1.5), body.position);
+    body.applyImpulse(new CANNON.Vec3(Math.random() - 0.5, Math.random() * 0.5, Math.random() - 0.5).scale(0.9), body.position);
 
     piece.userData.body = body;
   }
@@ -300,12 +327,12 @@ const init = () => {
   controller.addEventListener('select', checkButtonClick);
   scene.add(controller);
 
-  createPlayButton();
   loadAudio();
 
   window.addEventListener('resize', onWindowResize, false);
 
   renderer.xr.addEventListener('sessionstart', () => {
+    createPlayButton();
     scene.add(playButton);
   });
 };
