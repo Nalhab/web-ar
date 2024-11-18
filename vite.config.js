@@ -25,7 +25,8 @@ export default defineConfig({
             '@fortawesome/react-fontawesome',
             'react',
             'react-dom',
-            'gl-matrix'
+            'gl-matrix',
+            'cannon-es'
         ]
     },
     esbuild: {
@@ -89,7 +90,8 @@ export default defineConfig({
             '@fortawesome/fontawesome-svg-core': '@fortawesome/fontawesome-svg-core',
             '@fortawesome/free-solid-svg-icons': '@fortawesome/free-solid-svg-icons',
             '@fortawesome/react-fontawesome': '@fortawesome/react-fontawesome',
-            'gl-matrix': 'gl-matrix'
+            'gl-matrix': 'gl-matrix',
+            'cannon-es': 'cannon-es'
         }
     },
 })
