@@ -91,18 +91,32 @@ const loadAudio = () => {
 };
 
 const playSound = () => {  
-  const sound = new THREE.Audio(listener);
+  const sound = new THREE.PositionalAudio(listener);
   sound.setBuffer(audioBuffer);
+  sound.setRolloffFactor(1);
+  sound.setDistanceModel('linear');
   sound.setLoop(false);
   sound.setVolume(0.5);
+
+  if (playButton) {
+    sound.position.copy(playButton.position);
+  }
+
+  scene.add(sound);
   sound.play();
 };
 
 const playMusic = () => {
-  const music = new THREE.Audio(listener);
+  const music = new THREE.PositionalAudio(listener);
   music.setBuffer(musicBuffer);
+  music.setRolloffFactor(0.5);
+  music.setDistanceModel('linear');
   music.setLoop(true);
   music.setVolume(0.5);
+  
+  music.position.set(0, 2, 0);
+  scene.add(music);
+  
   setTimeout(() => {
     music.play();
   }, 1000);
@@ -276,6 +290,8 @@ const onSelect = (event) => {
   const mesh = new Mesh(new THREE.SphereGeometry(0.04, 32, 32), material);
   mesh.position.set(0, 0, -0.3).applyMatrix4(controller.matrixWorld);
   mesh.quaternion.setFromRotationMatrix(controller.matrixWorld);
+  mesh.castShadow = true;
+  mesh.receiveShadow = false;
   scene.add(mesh);
 };
 
@@ -319,6 +335,27 @@ const init = () => {
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.setAnimationLoop(animate);
   renderer.xr.enabled = true;
+
+  const sessionInit = {
+    requiredFeatures: ['hit-test', 'plane-detection'],
+    optionalFeatures: ['dom-overlay'],
+    domOverlay: { root: document.body }
+  }
+
+  const handlePlanes = (event) => {
+    event.planes.forEach((plane) => {
+      const geometry = new THREE.PlaneGeometry(plane.width, plane.height);
+      const material = new THREE.ShadowMaterial({ opacity: 0.5 });
+      const mesh = new THREE.Mesh(geometry, material);
+      mesh.rotateX(-Math.PI / 2);
+      mesh.position.copy(plane.center);
+      mesh.receiveShadow = true;
+      scene.add(mesh);
+    }
+  )};
+
+  renderer.xr.addEventListener('planesdetected', handlePlanes);
+
   document.body.appendChild(renderer.domElement);
 
   const xrButton = XRButton.createButton(renderer, {});
