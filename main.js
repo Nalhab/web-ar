@@ -111,13 +111,13 @@ const playMusic = () => {
     new THREE.BoxGeometry(0.1, 0.1, 0.1),
     new THREE.MeshBasicMaterial({ visible: false })
   );
-  audioSource.position.set(0, 2, -2);
+  audioSource.position.set(0, 2, -1);
   scene.add(audioSource);
 
   const music = new THREE.PositionalAudio(listener);
   music.setBuffer(musicBuffer);
-  music.setRolloffFactor(1);
-  music.setDistanceModel('inverse');
+  music.setRolloffFactor(4);
+  music.setDistanceModel('exponential');
   music.setLoop(true);
   music.setVolume(0.5);
 
@@ -289,16 +289,42 @@ const breakPlayButton = () => {
   isDrawing = false;
 };
 
+// Modifier onSelect pour ajouter texture et ombres
 const onSelect = (event) => {
   if (!placingEnabled) return;
 
-  const material = new MeshPhongMaterial({ color: 0xffffff * Math.random() });
+  // Créer une texture avec un motif
+  const textureLoader = new THREE.TextureLoader();
+  const texture = textureLoader.load('https://threejs.org/examples/textures/sprites/circle.png');
+  
+  const material = new MeshPhongMaterial({ 
+    color: 0xffffff * Math.random(),
+    map: texture,
+    bumpMap: texture,
+    bumpScale: 0.02,
+    shininess: 50
+  });
+
   const mesh = new Mesh(new THREE.SphereGeometry(0.04, 32, 32), material);
   mesh.position.set(0, 0, -0.3).applyMatrix4(controller.matrixWorld);
   mesh.quaternion.setFromRotationMatrix(controller.matrixWorld);
   mesh.castShadow = true;
-  mesh.receiveShadow = false;
   scene.add(mesh);
+
+  // Ajouter un plan invisible sous chaque sphère pour l'ombre
+  const shadowPlane = new THREE.Mesh(
+    new THREE.PlaneGeometry(0.2, 0.2),
+    new THREE.ShadowMaterial({ 
+      opacity: 0.3,
+      transparent: true,
+      color: 0x000000
+    })
+  );
+  shadowPlane.position.copy(mesh.position);
+  shadowPlane.position.y -= 0.04; // Juste sous la sphère
+  shadowPlane.rotateX(-Math.PI / 2);
+  shadowPlane.receiveShadow = true;
+  scene.add(shadowPlane);
 };
 
 const animate = () => {
@@ -347,29 +373,17 @@ const init = () => {
   const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
   directionalLight.position.set(0, 5, 0);
   directionalLight.castShadow = true;
-  directionalLight.shadow.mapSize.width = 1024;
-  directionalLight.shadow.mapSize.height = 1024;
+
+  directionalLight.shadow.mapSize.width = 2048;
+  directionalLight.shadow.mapSize.height = 2048;
+  directionalLight.shadow.camera.near = 0.1;
+  directionalLight.shadow.camera.far = 10;
+  directionalLight.shadow.camera.left = -5;
+  directionalLight.shadow.camera.right = 5;
+  directionalLight.shadow.camera.top = 5;
+  directionalLight.shadow.camera.bottom = -5;
+  directionalLight.shadow.bias = -0.001;
   scene.add(directionalLight);
-
-  const sessionInit = {
-    requiredFeatures: ['hit-test', 'plane-detection'],
-    optionalFeatures: ['dom-overlay'],
-    domOverlay: { root: document.body }
-  }
-
-  const handlePlanes = (event) => {
-    event.planes.forEach((plane) => {
-      const geometry = new THREE.PlaneGeometry(plane.width || 2, plane.height || 2);
-      const material = new THREE.ShadowMaterial({ opacity: 0.5, transparent: true });
-      const mesh = new THREE.Mesh(geometry, material);
-      mesh.rotateX(-Math.PI / 2);
-      mesh.position.copy(plane.center);
-      mesh.receiveShadow = true;
-      scene.add(mesh);
-    }
-  )};
-
-  renderer.xr.addEventListener('planesdetected', handlePlanes);
 
   document.body.appendChild(renderer.domElement);
 
