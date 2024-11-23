@@ -26,6 +26,7 @@ import { TextGeometry } from 'three/examples/jsm/geometries/TextGeometry.js';
 
 import * as THREE from 'three';
 import * as CANNON from 'cannon-es';
+import { render } from 'react-dom';
 
 async function setupXR(xrMode) {
   if (xrMode !== 'immersive-vr') return;
@@ -116,7 +117,7 @@ const playMusic = () => {
 
   const music = new THREE.PositionalAudio(listener);
   music.setBuffer(musicBuffer);
-  music.setRolloffFactor(4);
+  music.setRolloffFactor(3);
   music.setDistanceModel('exponential');
   music.setLoop(true);
   music.setVolume(0.5);
@@ -289,42 +290,22 @@ const breakPlayButton = () => {
   isDrawing = false;
 };
 
-// Modifier onSelect pour ajouter texture et ombres
 const onSelect = (event) => {
   if (!placingEnabled) return;
 
-  // Créer une texture avec un motif
-  const textureLoader = new THREE.TextureLoader();
-  const texture = textureLoader.load('https://threejs.org/examples/textures/sprites/circle.png');
-  
-  const material = new MeshPhongMaterial({ 
-    color: 0xffffff * Math.random(),
-    map: texture,
-    bumpMap: texture,
-    bumpScale: 0.02,
-    shininess: 50
+  const material = new THREE.MeshPhongMaterial({
+    color: new Color().setHSL(Math.random(), 1, 0.5),
+    shininess: 100,
+    specular: 0x444444,
+    reflectivity: 0.5
   });
 
   const mesh = new Mesh(new THREE.SphereGeometry(0.04, 32, 32), material);
   mesh.position.set(0, 0, -0.3).applyMatrix4(controller.matrixWorld);
   mesh.quaternion.setFromRotationMatrix(controller.matrixWorld);
   mesh.castShadow = true;
+  mesh.receiveShadow = true;
   scene.add(mesh);
-
-  // Ajouter un plan invisible sous chaque sphère pour l'ombre
-  const shadowPlane = new THREE.Mesh(
-    new THREE.PlaneGeometry(0.2, 0.2),
-    new THREE.ShadowMaterial({ 
-      opacity: 0.3,
-      transparent: true,
-      color: 0x000000
-    })
-  );
-  shadowPlane.position.copy(mesh.position);
-  shadowPlane.position.y -= 0.04; // Juste sous la sphère
-  shadowPlane.rotateX(-Math.PI / 2);
-  shadowPlane.receiveShadow = true;
-  scene.add(shadowPlane);
 };
 
 const animate = () => {
@@ -355,35 +336,41 @@ const init = () => {
   camera = new PerspectiveCamera(75, aspect, 0.1, 10);
   camera.position.set(0, 1.6, 3);
 
-  const light = new AmbientLight(0xffffff, 1.0);
+  const light = new AmbientLight(0xffffff, 0.3);
   scene.add(light);
 
   const hemiLight = new HemisphereLight(0xffffff, 0xbbbbff, 3);
   hemiLight.position.set(0.5, 1, 0.25);
   scene.add(hemiLight);
 
-  renderer = new WebGLRenderer({ antialias: true, alpha: true });
+  renderer = new WebGLRenderer({ 
+    antialias: true, 
+    alpha: true,
+    logarithmicDepthBuffer: true
+  });
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.setAnimationLoop(animate);
   renderer.xr.enabled = true;
-  renderer.shadowMap.enabled = true;
-  renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+  // renderer.shadowMap.enabled = true;
 
-  const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
-  directionalLight.position.set(0, 5, 0);
-  directionalLight.castShadow = true;
-
-  directionalLight.shadow.mapSize.width = 2048;
-  directionalLight.shadow.mapSize.height = 2048;
+  const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
+  directionalLight.position.set(-2, 4, 2);
+  directionalLight.castShadow = false;
+  directionalLight.shadow.mapSize.width = 4096;
+  directionalLight.shadow.mapSize.height = 4096;
   directionalLight.shadow.camera.near = 0.1;
   directionalLight.shadow.camera.far = 10;
-  directionalLight.shadow.camera.left = -5;
-  directionalLight.shadow.camera.right = 5;
-  directionalLight.shadow.camera.top = 5;
-  directionalLight.shadow.camera.bottom = -5;
-  directionalLight.shadow.bias = -0.001;
+  directionalLight.shadow.camera.left = -2;
+  directionalLight.shadow.camera.right = 2;
+  directionalLight.shadow.camera.top = 2;
+  directionalLight.shadow.camera.bottom = -2;
+  directionalLight.shadow.bias = -0.00001;
+  directionalLight.shadow.normalBias = 0.02;
+  directionalLight.shadow.radius = 4;
   scene.add(directionalLight);
+
+  //renderer.shadowMap.type = THREE.VSMShadowMap;
 
   document.body.appendChild(renderer.domElement);
 
