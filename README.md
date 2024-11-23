@@ -10,7 +10,8 @@ Web AR Anatomy Pictionary is an interactive augmented reality (AR) game that all
 - **3D Interaction**: Integration of Three.js for manipulating 3D objects.
 - **Educational Game**: Learn human anatomy by drawing different body parts.
 - **Dynamic User Interface**: Interactive 3D buttons and texts.
-- **Sound Effects**: Sounds and music for an enriched experience.
+- **Sound Effects**: Sounds and music for an enriched experience (sounds are spatialized).
+- **Graphics**: The spheres reflect light and shine for better graphics.
 
 ## Prerequisites
 
@@ -96,6 +97,10 @@ First, the user will be asked to draw a body part. They will have 1 minute to dr
 ## Credits
 
 This project uses musics from Pixabay.
+
+## Inspiration
+
+The inspiration comes from classic pictionary games and our last Web XR project.
 
 ## License
 
