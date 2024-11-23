@@ -107,15 +107,21 @@ const playSound = () => {
 };
 
 const playMusic = () => {
+  const audioSource = new THREE.Mesh(
+    new THREE.BoxGeometry(0.1, 0.1, 0.1),
+    new THREE.MeshBasicMaterial({ visible: false })
+  );
+  audioSource.position.set(0, 2, -2);
+  scene.add(audioSource);
+
   const music = new THREE.PositionalAudio(listener);
   music.setBuffer(musicBuffer);
-  music.setRolloffFactor(0.5);
-  music.setDistanceModel('linear');
+  music.setRolloffFactor(1);
+  music.setDistanceModel('inverse');
   music.setLoop(true);
   music.setVolume(0.5);
-  
-  music.position.set(0, 2, 0);
-  scene.add(music);
+
+  audioSource.add(music);
   
   setTimeout(() => {
     music.play();
@@ -335,6 +341,15 @@ const init = () => {
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.setAnimationLoop(animate);
   renderer.xr.enabled = true;
+  renderer.shadowMap.enabled = true;
+  renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+
+  const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
+  directionalLight.position.set(0, 5, 0);
+  directionalLight.castShadow = true;
+  directionalLight.shadow.mapSize.width = 1024;
+  directionalLight.shadow.mapSize.height = 1024;
+  scene.add(directionalLight);
 
   const sessionInit = {
     requiredFeatures: ['hit-test', 'plane-detection'],
@@ -344,8 +359,8 @@ const init = () => {
 
   const handlePlanes = (event) => {
     event.planes.forEach((plane) => {
-      const geometry = new THREE.PlaneGeometry(plane.width, plane.height);
-      const material = new THREE.ShadowMaterial({ opacity: 0.5 });
+      const geometry = new THREE.PlaneGeometry(plane.width || 2, plane.height || 2);
+      const material = new THREE.ShadowMaterial({ opacity: 0.5, transparent: true });
       const mesh = new THREE.Mesh(geometry, material);
       mesh.rotateX(-Math.PI / 2);
       mesh.position.copy(plane.center);
